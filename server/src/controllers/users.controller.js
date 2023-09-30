@@ -1,6 +1,6 @@
 const { User } = require("../db");
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   const { id } = req.query;
 
   let users;
@@ -10,7 +10,7 @@ const getUsers = async (req, res) => {
       users = await User.findByPk(id);
     } else {
       users = await User.findAll({
-        order: [["user_name", "ASC"]],
+        order: [["name", "ASC"]],
       });
     }
 
@@ -22,8 +22,25 @@ const getUsers = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
-  const { userName, password, email } = req.body;
+const getUserById = async (req, res, next) => {
+  const { id } = req.params;
+  let user;
+  try {
+    if (id) {
+      user = await User.findByPk(id);
+    }
+    user
+      ? res.status(200).send(user)
+      : res.status(200).send("User wasn't found");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const postUser = async (req, res, next) => {
+  const { name, password, email } = req.body;
+
+  if(!name || !password || !email) res.json("Información incompleta")
 
   try {
     let found = await User.findAll({
@@ -31,14 +48,15 @@ const postUser = async (req, res) => {
         email,
       },
     });
-
-    if (found) {
+console.log(found)
+    if (found.length) {
       res.json("El usuario ya existe");
     } else {
       await User.create({
-        userName,
+        name,
         password,
         email,
+        isActive: true,
       });
       res.status(201).send("Nuevo usuario creado");
     }
@@ -47,5 +65,4 @@ const postUser = async (req, res) => {
   }
 };
 
-
-module.exports = { getUsers, postUser }
+module.exports = { getUsers, getUserById, postUser };
