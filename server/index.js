@@ -7,5 +7,5 @@ const server = app.listen(PORT, async () => {
 })
 
 server.on('error', error => {
-    console('Server error: ' + error)
+    console.log('Server error: ' + error)
 })

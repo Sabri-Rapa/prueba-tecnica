@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+require('./db.js');
+
 app.use(compression())
 
 app.use(express.json({ limit: "50mb" }));
