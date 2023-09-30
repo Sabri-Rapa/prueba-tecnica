@@ -1,17 +1,20 @@
 const express = require('express');
-const compression = require("compression");
-const cookieParser = require("cookie-parser");
+const compression = require('compression');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
-const app = express();
+const server = express();
 
-app.use(compression())
+require('./db.js');
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+server.use(compression())
 
-app.get('/test', (req, res) => {
+server.use(express.json({ limit: "50mb" }));
+server.use(express.urlencoded({ extended: true }));
+server.use(cookieParser());
+server.use(morgan('dev'))
+server.get('/test', (req, res) => {
     res.json({message: 'server on'})
 })
 
-module.exports = app;
+module.exports = server;

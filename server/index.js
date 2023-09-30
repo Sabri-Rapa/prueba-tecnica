@@ -1,11 +1,11 @@
-const app = require('./src/app')
+const server = require("./src/app");
+const { conn } = require("./src/db.js");
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`)
-})
+conn.sync({ force: false }).then(async () => {
+    server.listen(PORT, async () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+});
 
-server.on('error', error => {
-    console('Server error: ' + error)
-})
