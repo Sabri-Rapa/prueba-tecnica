@@ -69,4 +69,26 @@ console.log(found)
   }
 };
 
-module.exports = { getUsers, getUserById, postUser };
+const verifyUser = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    let user = await User.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (user) {
+      user.password === password
+        ? res.status(200).json({ access: true, userId: user.id })
+        : res.status(401).json({ access: false, message: "Wrong password" });
+    }
+
+    res.status(401).json({ access: false, message: "User doesn't exist" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getUsers, getUserById, postUser, verifyUser };
