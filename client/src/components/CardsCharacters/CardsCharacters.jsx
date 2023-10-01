@@ -6,15 +6,15 @@ import style from "./cardsCharacters.module.css";
 const CardsCharacters = () => {
   const [characters, setCharacters] = useState([]);
 
-  useEffect(() => {
-    const getCh = async () => {
-      const ch = await axios("http://localhost:5000/api/characters/marvel");
-      console.log(ch.data);
-      setCharacters(ch.data);
-    };
-    getCh();
+  // useEffect(() => {
+  //   const getCh = async () => {
+  //     const ch = await axios("http://localhost:5000/api/characters/marvel");
+  //     console.log(ch.data);
+  //     setCharacters(ch.data);
+  //   };
+  //   getCh();
 
-  }, []);
+  // }, []);
 
   return (
     <div className={style.container}>
