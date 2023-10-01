@@ -1,5 +1,6 @@
 import { useState } from "react";
 import handleChange from "../../utils/handleChange.js";
+import axios from "axios";
 
 const CreateCharacterForm = () => {
   const [newCharacter, setNewCharacter] = useState({
@@ -8,9 +9,29 @@ const CreateCharacterForm = () => {
     urlImage: "",
   });
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:5000/api/characters", {
+        name: newCharacter.name,
+        description: newCharacter.description,
+        image: newCharacter.urlImage,
+        userId: localStorage.getItem("userId"),
+      });
+
+      setNewCharacter({
+        name: "",
+        description: "",
+        urlImage: "",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>Name:</label>
         <input
           type="text"
@@ -39,6 +60,6 @@ const CreateCharacterForm = () => {
       </form>
     </div>
   );
-}; 
+};
 
 export default CreateCharacterForm;

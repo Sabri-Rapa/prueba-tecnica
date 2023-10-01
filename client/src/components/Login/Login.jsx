@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import validation from "./validation";
+import loginValidation from "./loginValidation";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export const Login = () => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setErrors(validation({ ...userData, [e.target.name]: e.target.value }));
+    setErrors(loginValidation({ ...userData, [e.target.name]: e.target.value }));
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 

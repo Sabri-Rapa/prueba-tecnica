@@ -22,4 +22,4 @@ const loginValidation = (data) => {
     return errors;
 }
 
-export { loginValidation };
+export default loginValidation;
