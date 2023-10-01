@@ -58,7 +58,11 @@ console.log(found)
         email,
         isActive: true,
       });
-      res.status(201).send("Nuevo usuario creado");
+      res.status(201).json({
+        ok: true,
+        status:201,
+        message: 'New user created'
+      });
     }
   } catch (error) {
     next(error);
