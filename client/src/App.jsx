@@ -3,6 +3,7 @@ import "./App.css";
 import HomeView from "./views/HomeView";
 import CardsView from "./views/CardsView";
 import Nav from "./components/Nav/Nav";
+import CreateCharacter from "./views/CreateCharacter";
 function App() {
   const { pathname } = useLocation();
 
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route path="/characters" element={<CardsView />} />
+        <Route path="/create-character" element={<CreateCharacter />}/>
       </Routes>
     </>
   );
