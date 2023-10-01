@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
   class PersonalizedCharacter extends Model {}
   
 
-  User.init(
+  PersonalizedCharacter.init(
     {
       id: {
         type: DataTypes.UUID,

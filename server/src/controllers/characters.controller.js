@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { PersonalizedCharacter } = require("../db");
 
 const getMarvelApiCharacters = async (req, res, next) => {
   const { MARVEL_TS, MARVEL_APIKEY, MARVEL_HASH } = process.env;
@@ -14,7 +15,7 @@ const getMarvelApiCharacters = async (req, res, next) => {
       return {
         id: ch.id,
         name: ch.name,
-        image: ch.thumbnail.path + '.' + ch.thumbnail.extension,
+        image: ch.thumbnail.path + "." + ch.thumbnail.extension,
         description: ch.description,
         numberComics: ch.comics.available,
         numberSeries: ch.series.available,
@@ -22,10 +23,41 @@ const getMarvelApiCharacters = async (req, res, next) => {
       };
     });
 
-    res.send(charactersData);
+    res.status(200).json(charactersData);
   } catch (err) {
-    console.log(err);
+    next(err);
   }
 };
 
-module.exports = { getMarvelApiCharacters };
+const createCharacter = async (req, res, next) => {
+  const { name, description, image } = req.body;
+
+  if (!name || !description || !image) {
+    res.status(400).json({
+      ok: false,
+      status: 400,
+      message: "Information incomplete",
+    });
+  }
+
+  let aux = name[0].toUpperCase() + name.slice(1);
+
+  try {
+    let newCharacter = await PersonalizedCharacter.create({
+        name: aux,
+        description,
+        image,
+        isActive: true,
+    });
+
+    res.status(201).json({
+      ok: true,
+      status: 201,
+      message: "New character created: " + newCharacter,
+    });
+  } catch (err) {
+    next(err)
+  }
+};
+
+module.exports = { getMarvelApiCharacters, createCharacter };

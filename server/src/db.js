@@ -27,10 +27,11 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User } = sequelize.models;
+const { User, PersonalizedCharacter } = sequelize.models;
 
 // Relationships between models:
-
+User.hasMany(PersonalizedCharacter);
+PersonalizedCharacter.belongsTo(User)
 
 
 module.exports = {
