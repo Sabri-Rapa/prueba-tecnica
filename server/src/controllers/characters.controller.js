@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { PersonalizedCharacter } = require("../db");
+const { PersonalizedCharacter, User } = require("../db");
 
 const getMarvelApiCharacters = async (req, res, next) => {
   const { MARVEL_TS, MARVEL_APIKEY, MARVEL_HASH } = process.env;
@@ -30,8 +30,8 @@ const getMarvelApiCharacters = async (req, res, next) => {
 };
 
 const createCharacter = async (req, res, next) => {
-  const { name, description, image } = req.body;
-
+  const { name, description, image, userId } = req.body;
+  
   if (!name || !description || !image) {
     res.status(400).json({
       ok: false,
@@ -48,6 +48,7 @@ const createCharacter = async (req, res, next) => {
         description,
         image,
         isActive: true,
+        UserId: userId
     });
 
     res.status(201).json({
