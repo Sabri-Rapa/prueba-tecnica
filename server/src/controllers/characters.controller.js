@@ -1,29 +1,44 @@
 const axios = require("axios");
 const { PersonalizedCharacter, User } = require("../db");
 
-const getMarvelApiCharacters = async (req, res, next) => {
+const getCharacters = async (req, res, next) => {
   const { MARVEL_TS, MARVEL_APIKEY, MARVEL_HASH } = process.env;
+  const { userId } = req.query;
 
   try {
-    const characters = await axios.get(
+    const charactersMarvel = await axios.get(
       `http://gateway.marvel.com/v1/public/characters?ts=${MARVEL_TS}&apikey=${MARVEL_APIKEY}&hash=${MARVEL_HASH}`
     );
+    const charactersDB = PersonalizedCharacter.findAll({
+      where: {
+        UserId: userId
+      }
+    })
 
-    const charactersArray = characters.data.data.results;
+    Promise.all([
+      charactersMarvel,
+      charactersDB
+    ])
+    .then((resp) => {
+      const [charactersMarvel, charactersDB] = resp;
 
-    const charactersData = charactersArray.map((ch) => {
-      return {
-        id: ch.id,
-        name: ch.name,
-        image: ch.thumbnail.path + "." + ch.thumbnail.extension,
-        description: ch.description,
-        numberComics: ch.comics.available,
-        numberSeries: ch.series.available,
-        numberStories: ch.stories.available,
-      };
-    });
+      let filteredMarvelApi = charactersMarvel.data.data.results.map((ch) => {
+        return {
+          id: ch.id,
+          name: ch.name,
+          image: ch.thumbnail.path + "." + ch.thumbnail.extension,
+          description: ch.description,
+          numberComics: ch.comics.available,
+          numberSeries: ch.series.available,
+          numberStories: ch.stories.available,
+        };
+      });
 
-    res.status(200).json(charactersData);
+      let allCharacters = [...filteredMarvelApi, ...charactersDB];
+      
+      res.status(200).json(allCharacters);
+    })
+
   } catch (err) {
     next(err);
   }
@@ -31,7 +46,7 @@ const getMarvelApiCharacters = async (req, res, next) => {
 
 const createCharacter = async (req, res, next) => {
   const { name, description, image, userId } = req.body;
-  
+
   if (!name || !description || !image) {
     res.status(400).json({
       ok: false,
@@ -61,4 +76,4 @@ const createCharacter = async (req, res, next) => {
   }
 };
 
-module.exports = { getMarvelApiCharacters, createCharacter };
+module.exports = { getCharacters, createCharacter };
