@@ -1,11 +1,9 @@
 const router = require('express').Router();
-const { getCharacters, createCharacter } = require('../controllers/characters.controller')
-// const {createCharacter, putCharacter, deleteCharacter } = require('../controllers/characters.controller')
+const { getCharacters, createCharacter, putCharacter, deleteCharacter } = require('../controllers/characters.controller')
 
 router.get('/', getCharacters)
-// router.get('/:id', getCharacterById)
 router.post('/', createCharacter)
-// router.put('/', putCharacter)
-// router.delete('/', deleteCharacter)
+router.put('/:id', putCharacter)
+router.delete('/:id', deleteCharacter)
 
 module.exports = router;
