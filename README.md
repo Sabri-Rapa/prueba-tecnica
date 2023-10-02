@@ -11,6 +11,7 @@ Una vez creados, aparecerán junto con los de Marvel. Podés filtrarlos, vincula
 
 
 ### Desarrollado con
+* React
 * Express.js
 * API Marvel 
 * MySQL
